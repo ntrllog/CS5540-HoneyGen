@@ -1,0 +1,52 @@
+<!doctype html>
+<html class="h-100"> 
+  <head>
+    <title>Discorl</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <style>
+      body {
+        background-color: #5865F2;
+      }
+      form {
+        background-color: #36393F;
+      }
+      input[type="text"], input[type="text"]:focus, input[type="password"], input[type="password"]:focus {
+        color: white;
+        background-color: #202225;
+      }
+      button[type="submit"], button[type="submit"]:visited {
+        background-color: #5865F2;
+      }
+      button[type="submit"]:hover {
+        background-color: #4752C4;
+      }
+    </style>
+  </head>
+  <body class="h-100">
+    <div class="container d-flex flex-column justify-content-center align-items-center w-50 h-100">
+      <form class="w-100 p-5" method="post" action="create">
+        <h2 class="text-center text-light">Create an account</h2>
+
+{% if errormsg %}
+        <p class="text-danger">{{ errormsg }}</p>
+{% endif %}
+
+        <div class="form-outline mb-4">
+          <input type="text" id="loginName" name="username" class="form-control" />
+          <label class="form-label text-light" for="loginName">Username</label>
+        </div>
+
+        <div class="form-outline">
+          <input type="text" id="loginPassword" name="password" class="form-control" />
+          <label class="form-label text-light" for="loginPassword">Password</label>
+        </div>
+
+        <p class="text-light">By clicking Sign Up, you agree to something something <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>. Don't use your real password please.</p>
+
+        <button type="submit" class="btn btn-block mb-4 w-100 text-light">Sign Up</button>
+
+        <p class="text-secondary"><a href="index">Already have an account?</a></p>
+      </form>
+    </div>
+  </body>
+</html>
