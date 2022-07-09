@@ -31,6 +31,7 @@ Linux Packages:
 * supervisord
 
 ## Notes (to self)
+* DBUSERNAME, DBPASSWORD, and FLASKSESSIONKEY are environment variables that have to be set/exported
 * Flask's secret key (what I call FLASKSESSIONKEY) can be anything, but it is needed for session data
 * If using Docker:
   * the ngrok command in the Dockerfile is incomplete - it needs the ngrok auth token
