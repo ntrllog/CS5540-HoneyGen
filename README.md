@@ -30,9 +30,10 @@ Linux Packages:
 * ngrok
 * supervisord
 
-## Notes (to self)
+## Notes to self
 * DBUSERNAME, DBPASSWORD, and FLASKSESSIONKEY are environment variables that have to be set/exported
 * Flask's secret key (what I call FLASKSESSIONKEY) can be anything, but it is needed for session data
 * If using Docker:
   * the ngrok command in the Dockerfile is incomplete - it needs the ngrok auth token
   * change the command in gunicorn.conf to `python3 -m gunicorn app:app -w 4 -b 0.0.0.0:5000`
+  * the flaskproj folder must contain app.py, templates/, and model_trained_on_rockyou_500_epochs.bin
