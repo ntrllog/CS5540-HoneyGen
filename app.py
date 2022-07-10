@@ -69,21 +69,24 @@ def forgotpw():
 
     include_actual = escape(request.form['include_actual'])
 
+    honeywords = requests.post(os.environ['GCPROCKYOUURL', json={'password': password, 'k': k, 'include_actual': include_actual}).text.split(',')
+    '''
     honeywords=[]
     if include_actual == 'true':
-        honeywords.append(obfuscatepw(password))
+        honeywords.append(obfuscate_pw(password))
     if k-len(honeywords) > 0:
         model = fasttext.load_model("model_trained_on_rockyou_500_epochs.bin")
         temp = model.get_nearest_neighbors(password,k=(k-len(honeywords)))
         for element in temp:
-            honeywords.append(obfuscatepw(element[1]))
+            honeywords.append(obfuscate_pw(element[1]))
+    '''
     return {e: 0 for e in honeywords}
 
 @app.post('/getuser')
 def getuser():
     return list(db.users1.aggregate([{'$sample': {'size': 1}}]))[0]['username']
 
-def obfuscatepw(password):
+def obfuscate_pw(password):
     o = list(password)
     n_stars = len(password)//2
     for i in random.sample(range(len(password)), n_stars):

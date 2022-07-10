@@ -1,0 +1,54 @@
+import functions_framework, fasttext, os, random
+from google.cloud import storage
+
+@functions_framework.http
+def hello_http(request):
+    request_json = request.get_json(silent=True)
+    request_args = request.args
+
+    if request_json and 'password' in request_json:
+        password = request_json['password']
+    elif request_args and 'password' in request_args:
+        password = request_args['password']
+    if request_json and 'k' in request_json:
+        k = request_json['k']
+    elif request_args and 'k' in request_args:
+        k = request_args['k']
+    if request_json and 'include_actual' in request_json:
+        include_actual = request_json['include_actual']
+    elif request_args and 'include_actual' in request_args:
+        include_actual = request_args['include_actual']
+    else:
+        include_actual = False
+    return get_honeywords(password, k, include_actual)
+
+def download_bin_file():
+    client = storage.Client("cs5540-355702")
+    bucket = client.get_bucket("cs5540-honeygen")
+    blob = bucket.blob("model_trained_on_rockyou_500_epochs.bin")
+    
+    folder = '/tmp/'
+    if not os.path.exists(folder):
+        os.makedirs(folder)
+    blob.download_to_filename(folder + "model_trained_on_rockyou_500_epochs.bin")
+
+def get_honeywords(password, k, include_actual):
+    download_bin_file()
+
+    honeywords = []
+    if include_actual == 'true':
+        honeywords.append(obfuscate_pw(password))
+    if k-len(honeywords) > 0:
+        model = fasttext.load_model("/tmp/model_trained_on_rockyou_500_epochs.bin")
+        temp = model.get_nearest_neighbors(password, k=k)
+        for element in temp:
+            honeywords.append(obfuscate_pw(element[1]))
+
+    return ','.join(honeywords)
+
+def obfuscate_pw(password):
+    o = list(password)
+    n_stars = len(password)//2
+    for i in random.sample(range(len(password)), n_stars):
+        o[i] = '*'
+    return ''.join(o)

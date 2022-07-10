@@ -1,0 +1,3 @@
+functions-framework==3.*
+fasttext
+google-cloud-storage

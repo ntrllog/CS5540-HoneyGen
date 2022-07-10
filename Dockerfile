@@ -1,7 +1,8 @@
 FROM ubuntu:20.04
 
 RUN apt update -y && apt upgrade -y && apt install -y python3 python3-pip vim curl supervisor
-RUN pip install flask pymongo pymongo[srv] flask-pymongo gunicorn fasttext
+RUN pip install flask pymongo flask-pymongo gunicorn fasttext requests
+RUN pip install pymongo[srv]
 
 COPY flaskproj /flaskproj
 
