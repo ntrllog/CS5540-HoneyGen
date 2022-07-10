@@ -86,12 +86,14 @@ def forgotpw():
 def getuser():
     return list(db.users1.aggregate([{'$sample': {'size': 1}}]))[0]['username']
 
+'''
 def obfuscate_pw(password):
     o = list(password)
     n_stars = len(password)//2
     for i in random.sample(range(len(password)), n_stars):
         o[i] = '*'
     return ''.join(o)
+'''
 
 def verify_user(username, password):
     user_doc = db.users1.find_one({'username': username})
