@@ -53,6 +53,8 @@ mv model_trained_on_rockyou_500_epochs.bin ../CS5540-HoneyGen
   ```
   cd honeygen-generating-honeywords-using-representation-learning/
   cat password_lists_processed_50000_records/* > password_lists_processed_50000_records/combined.txt
+  python3 FastText.py
+  mv model_trained_on_combined_500_epochs.bin ../CS5540-HoneyGen
   ```
   * replace code in FastText.py accordingly
 
