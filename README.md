@@ -87,6 +87,6 @@ vim /var/log/ngrok.log
 * Flask's secret key (what I call FLASKSESSIONKEY) can be anything, but it is needed for session data
 * If using Docker:
   * the ngrok command in the Dockerfile is incomplete - it needs the ngrok auth token
-  * change the command in gunicorn.conf to `python3 -m gunicorn app:app -w 4 -b 0.0.0.0:5000`
+  * change the command in gunicorn.conf to `python3 -m gunicorn app:app -w 4 -t 0 -b 0.0.0.0:5000`
   * the flaskproj folder must be created and contain app.py, templates/, and model_trained_on_rockyou_500_epochs.bin
   * change the directory in gunicorn.conf and ngrok.conf to /flaskproj
