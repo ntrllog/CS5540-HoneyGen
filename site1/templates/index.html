@@ -1,0 +1,127 @@
+<!doctype html>
+<html class="h-100">
+  <head>
+    <title>Sign in to GitHud &middot; GitHud</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>
+      body, input[type="text"], input[type="text"]:focus, input[type="number"], input[type="number"]:focus {
+        color: white;
+        background-color: #0d1117;
+      }
+    </style>
+  </head>
+  <body class="h-100">
+    <div class="container w-25 h-100">
+      <h1 class="text-center display-6 pt-5">Sign in to GitHud</h1>
+      <form method="post" action="login">
+        <div class="form-outline">
+          <label class="form-label text-light" for="username">Username</label>
+          <input type="text" id="username" name="username" class="form-control" />
+        </div>
+        <p><a id="getuserlink" class="mb-4" href="#">Let me guess a password!</a></p>
+
+        <div class="form-outline">
+          <label class="form-label text-light" for="password">Password</label>
+          <input type="text" id="password" name="password" class="form-control" required/>
+        </div>
+        <p><a id="getpwlink" class="mb-4" href="#">Okay, what's the real password?</a></p>
+        <p id="getpassword" class="text-light">hie</p>
+
+        <button type="submit" class="btn btn-success w-100">Sign in</button>
+
+        <div class="border mt-4 rounded">
+          <div class="p-3">
+            <div class="form-outline">
+              <input type="number" id="k" name="k" class="form-control" />
+              <label class="form-label text-light" for="k">k (number of total passwords &lt; 6 to return)</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="include">
+              <label class="form-check-label text-light" for="include">Include actual password</label>
+            </div>
+            <p><a id="forgotpwlink" class="mb-4" href="#">Forgot your password?</a></p>
+            <div id="forgotpassworddiv" class="text-light">
+              <p id="forgotpassword">hi</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-center align-items-center border mt-4 p-2 rounded">
+          <span>New? <a href="create">Create an account</a>.</span>
+        </div>
+      </form>
+    </div>
+    <script>
+      $('#forgotpwlink').click(function() {
+        let i = 0;
+        if (!$('#username').val()) {
+          alert('Username required!');
+          return;
+        }
+        if (!$('#k').val() || $('#k').val() > 5) {
+          alert('k required and <= 5');
+          return;
+        }
+        const t = setInterval(() => {
+          $('#forgotpassword').text('Getting similar passwords... this may take ~5 minutes' + '.'.repeat(i%4));
+          i++;
+        }, 1000);
+        $('#pwlist').remove();
+        $.ajax({
+          type: 'POST',
+          url: '/forgot',
+          data: {
+            username: $('#username').val(),
+            actual: "false",
+            k: $('#k').val(),
+            include_actual: $("#include").is(':checked')
+          },
+          success: function(pwlist) {
+            clearInterval(t);
+            let s = '<ul id="pwlist">';
+            Object.keys(pwlist).forEach(function(e) {
+              s += '<li>' + e + '</li>';
+            });
+            s += '</ul>';
+            $('#forgotpassword').text('Here are some passwords somewhat like your original password: ');
+            $('#forgotpassworddiv').append(s);
+          },
+          error: function(jqXHR, exception) {
+            clearInterval(t);
+            $('#forgotpassword').text(jqXHR.responseText);
+          }
+        });
+      });
+
+      $('#getpwlink').click(function() {
+        if (!$('#username').val()) {
+          alert('Username required!');
+        } else {
+          $.ajax({
+            type: 'POST',
+            url: '/forgot',
+            data: {
+              username: $('#username').val(),
+              actual: "true"
+            },
+            success: function(pw) {
+              $('#getpassword').text('Your password is: ' + pw);
+            }
+          });
+        }
+      });
+
+      $('#getuserlink').click(function() {
+        $('#username').val('');
+        $.ajax({
+          type: 'POST',
+          url: '/getuser',
+          success: function(username) {
+            $('#username').val(username);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

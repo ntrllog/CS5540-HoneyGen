@@ -69,7 +69,7 @@ def forgotpw():
 
     include_actual = escape(request.form['include_actual'])
 
-    honeywords = requests.post(os.environ['GCPROCKYOUURL'], json={'password': password, 'k': k, 'include_actual': include_actual}).text.split(',')
+    honeywords = requests.post(os.environ['GCPURL'], json={'password': password, 'k': k, 'include_actual': include_actual}).text.split(',')
     '''
     honeywords=[]
     if include_actual == 'true':

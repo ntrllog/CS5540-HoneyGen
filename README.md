@@ -47,14 +47,14 @@ Generate model
 ```
 cd honeygen-generating-honeywords-using-representation-learning/
 python3 FastText.py
-mv model_trained_on_rockyou_500_epochs.bin ../CS5540-HoneyGen
+mv model_trained_on_rockyou_500_epochs.bin ../CS5540-HoneyGen/site1
 ```
 * to generate the combined model:
   ```
   cd honeygen-generating-honeywords-using-representation-learning/
   cat password_lists_processed_50000_records/* > password_lists_processed_50000_records/combined.txt
   python3 FastText.py
-  mv model_trained_on_combined_500_epochs.bin ../CS5540-HoneyGen
+  mv model_trained_on_combined_500_epochs.bin ../CS5540-HoneyGen/site1
   ```
   * replace code in FastText.py accordingly
 
@@ -63,14 +63,19 @@ Set credentials
 export DBUSERNAME=<insert mongodb username here>
 export DBPASSWORD=<insert mongodb password here>
 export FLASKSESSIONKEY=<insert a random string here>
-export GCPROCKYOUURL=<insert url here>
+export GCPURL=<insert url here>
 ngrok config add-authtoken <insert ngrok auth token here>
 ```
-* set/export GCPCOMBINEDURL instead of GCPROCKYOUURL if using the combined model
+
+Test it!
+```
+cd ../CS5540-HoneyGen/site1
+flask run
+```
 
 Run it!
 ```
-cd ../CS5540-HoneyGen
+cd ../CS5540-HoneyGen/site1
 sudo mv gunicorn.conf /etc/supervisor/conf.d/gunicorn.conf
 sudo mv ngrok.conf /etc/supervisor/conf.d/ngrok.conf
 sudo unlink /var/run/supervisor.sock
@@ -82,11 +87,11 @@ vim /var/log/ngrok.log
 
 ## Notes to self
 * The application calls a Google Cloud Function to load the model from Google Cloud Storage and get the k-nearest neighbors
-  * the combined model needs &gt; 2 GB memory
-* DBUSERNAME, DBPASSWORD, FLASKSESSIONKEY, GCPROCKYOUURL, GCPCOMBINEDURL are environment variables that have to be set/exported
+* DBUSERNAME, DBPASSWORD, FLASKSESSIONKEY, GCPURL are environment variables that have to be set/exported
 * Flask's secret key (what I call FLASKSESSIONKEY) can be anything, but it is needed for session data
 * If using Docker:
   * the ngrok command in the Dockerfile is incomplete - it needs the ngrok auth token
-  * change the command in gunicorn.conf to `python3 -m gunicorn app:app -w 4 -t 0 -b 0.0.0.0:5000`
-  * the flaskproj folder must be created and contain app.py, templates/, and model_trained_on_rockyou_500_epochs.bin
+  * if testing, use `flask run --host=0.0.0.0:5000`
+  * if running, change the command in gunicorn.conf to `python3 -m gunicorn app:app -w 4 -t 0 -b 0.0.0.0:5000`
+  * the flaskproj folder must be created and contain app.py, templates/, and the appropriate model.bin
   * change the directory in gunicorn.conf and ngrok.conf to /flaskproj
