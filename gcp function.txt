@@ -40,9 +40,10 @@ def get_honeywords(password, k, include_actual):
         honeywords.append(obfuscate_pw(password))
     if k-len(honeywords) > 0:
         model = fasttext.load_model("/tmp/model_trained_on_rockyou_500_epochs.bin")
-        temp = model.get_nearest_neighbors(password, k=k)
+        temp = model.get_nearest_neighbors(password, k=(k-len(honeywords)))
         for element in temp:
             honeywords.append(obfuscate_pw(element[1]))
+    random.shuffle(honeywords)
 
     return ','.join(honeywords)
 
