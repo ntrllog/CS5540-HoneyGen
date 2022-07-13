@@ -14,7 +14,7 @@ A Flask web app that implements a proposed idea for using representation learnin
 
 Their [source code](https://bitbucket.org/srecgrp/honeygen-generating-honeywords-using-representation-learning/src/master/) was also used and modified.
 
-## Prereqs
+## Required Packages
 Python:
 * python = 3.8.10
 * flask = 2.0.3
@@ -46,15 +46,18 @@ Cloud Hosting:
     * third model - 16gb memory, timeout >= 300s
     * half model - 32gb memory, timeout >= 300s
   * Compute Engine
+    * VM instance with 2cpu, 2gb memory
 * ngrok
   * used to expose localhost to public
+  * free tier only allows one active session at a time
 
 ## Commands to Set Up and Run On Ubuntu Machine
 Install stuff
 ```
 sudo apt -y update && sudo apt -y upgrade
 sudo apt -y install python3-pip supervisor
-sudo pip3 install flask pymongo pymongo[srv] flask-pymongo fasttext gunicorn
+sudo pip3 install flask pymongo flask-pymongo fasttext gunicorn requests
+sudo pip3 install pymongo[srv]
 curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null && echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list && sudo apt -y update && sudo apt install -y ngrok
 ```
 
@@ -63,30 +66,6 @@ Get the code
 git clone https://github.com/ntrllog/CS5540-HoneyGen.git
 git clone https://bitbucket.org/srecgrp/honeygen-generating-honeywords-using-representation-learning.git
 ```
-
-Generate model
-```
-cd honeygen-generating-honeywords-using-representation-learning/
-python3 FastText.py
-mv model_trained_on_rockyou_500_epochs.bin ../CS5540-HoneyGen/site1
-```
-* to generate the combined model:
-  ```
-  cd honeygen-generating-honeywords-using-representation-learning/
-  cat password_lists_processed_50000_records/* > password_lists_processed_50000_records/combined.txt
-  python3 FastText.py
-  mv model_trained_on_combined_500_epochs.bin ../CS5540-HoneyGen/site1
-  ```
-  * replace code in FastText.py accordingly
-
-* to generate the quarter/third/half/3quarter models:
-  ```
-  mv CS5540-HoneyGen/password_lists_processed/* honeygen-generating-honeywords-using-representation-learning/password_lists_processed/
-  python3 FastText.py
-  mv model_trained_on_rockyou_third_500_epochs.bin ../CS5540-HoneyGen/site1
-  ```
-  * replace code in FastText.py accordingly
-  * modify less.py to generate custom preprocessed.txt files
 
 Set credentials
 ```
@@ -99,13 +78,13 @@ ngrok config add-authtoken <insert ngrok auth token here>
 
 Test it!
 ```
-cd ../CS5540-HoneyGen/site1
+cd CS5540-HoneyGen/site1/
 flask run
 ```
 
 Run it!
 ```
-cd ../CS5540-HoneyGen/site1
+cd CS5540-HoneyGen/site1/
 sudo mv gunicorn.conf /etc/supervisor/conf.d/gunicorn.conf
 sudo mv ngrok.conf /etc/supervisor/conf.d/ngrok.conf
 sudo unlink /var/run/supervisor.sock
@@ -116,10 +95,43 @@ vim /var/log/ngrok.log
   * if `sudo unlink /var/run/supervisor.sock` returns an error, that is okay
   * the public url is in ngrok.log
 
+Stop it!
+```
+sudo supervisorctl stop all
+sudo unlink /var/run/supervisor.sock
+```
+
+## Generating Models (for running on a local machine)
+```
+cd honeygen-generating-honeywords-using-representation-learning/
+python3 FastText.py
+```
+
+### Combined Model
+All the passwords from each website in password_lists_processed_50000_records/ combined into one list
+```
+cd honeygen-generating-honeywords-using-representation-learning/
+cat password_lists_processed_50000_records/* > password_lists_processed_50000_records/combined.txt
+python3 FastText.py
+```
+  * replace code in FastText.py accordingly
+
+### Reduced RockYou Model
+Use only 1/4, 1/3, 1/2, 3/4 of the RockYou list for a smaller model
+```
+mv CS5540-HoneyGen/less.py honeygen-generating-honeywords-using-representation-learning/password_lists_processed/
+python3 less.py
+cd honeygen-generating-honeywords-using-representation-learning/
+python3 FastText.py
+```
+  * replace code in FastText.py accordingly
+  * modify less.py to generate custom preprocessed.txt files
+
 ## Prepopulating Database With Fake Users
 ```
-cp honeygen-generating-honeywords-using-representation-learning/password_lists_processed_50000_records/zynga-com_sorted_preprocessed.txt CS5540-HoneyGen
-python3 CS5540-HoneyGen/create_users.py
+cp honeygen-generating-honeywords-using-representation-learning/password_lists_processed_50000_records/zynga-com_sorted_preprocessed.txt CS5540-HoneyGen/
+cd CS5540-HoneyGen/
+python3 create_users.py
 ```
   * this is also a Flask web app, so either run this on localhost or ngrok this
 
