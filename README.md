@@ -22,11 +22,32 @@ Python:
 * pymongo = 3.12.0
 * pymongo[srv]
 * fasttext = 0.9.2
-* gunicorn = 20.1.0
+* gunicorn = 20.1.0 (only if running in production setting)
 * requests = 2.28.1
 
 Linux Packages:
+* ngrok (only if running in production setting)
+
+## External Services That Need to Be Created
+Database:
+* MongoDB
+  * database named test
+  * collections named results, users
+  * don't forget network access configuration!
+
+Cloud Hosting:
+* Google Cloud
+  * Cloud Storage
+    * one bucket that contains the 4 models
+      * make sure bucket and model names are changed when creating the function
+  * Cloud Function
+    * combined model - 4gb memory, timeout >= 300s
+    * quarter model - 16gb memory, timeout >= 300s
+    * third model - 16gb memory, timeout >= 300s
+    * half model - 32gb memory, timeout >= 300s
+  * Compute Engine
 * ngrok
+  * used to expose localhost to public
 
 ## Commands to Set Up and Run On Ubuntu Machine
 Install stuff
@@ -58,14 +79,23 @@ mv model_trained_on_rockyou_500_epochs.bin ../CS5540-HoneyGen/site1
   ```
   * replace code in FastText.py accordingly
 
+* to generate the quarter/third/half/3quarter models:
+  ```
+  mv CS5540-HoneyGen/password_lists_processed/* honeygen-generating-honeywords-using-representation-learning/password_lists_processed/
+  python3 FastText.py
+  mv model_trained_on_rockyou_third_500_epochs.bin ../CS5540-HoneyGen/site1
+  ```
+  * replace code in FastText.py accordingly
+  * modify less.py to generate custom preprocessed.txt files
+
 Set credentials
 ```
-export DBUSERNAME=<insert mongodb database user username here>
-export DBPASSWORD=<insert mongodb database user password here>
+export DBURI=<insert mongodb connection string here>
 export FLASKSESSIONKEY=<insert a random string here>
 export GCPURL=<insert url here>
 ngrok config add-authtoken <insert ngrok auth token here>
 ```
+  * GCPURL is the url of the cloud function
 
 Test it!
 ```
@@ -83,11 +113,19 @@ sudo -E supervisord
 sudo supervisorctl status
 vim /var/log/ngrok.log
 ```
-* if `sudo unlink /var/run/supervisor.sock` returns an error, that is okay
+  * if `sudo unlink /var/run/supervisor.sock` returns an error, that is okay
+  * the public url is in ngrok.log
 
-## Notes to self
+## Prepopulating Database With Fake Users
+```
+cp honeygen-generating-honeywords-using-representation-learning/password_lists_processed_50000_records/zynga-com_sorted_preprocessed.txt CS5540-HoneyGen
+python3 CS5540-HoneyGen/create_users.py
+```
+  * this is also a Flask web app, so either run this on localhost or ngrok this
+
+## Misc Notes
 * The application calls a Google Cloud Function to load the model from Google Cloud Storage and get the k-nearest neighbors
-* DBUSERNAME, DBPASSWORD, FLASKSESSIONKEY, GCPURL are environment variables that have to be set/exported
+* DBURL, FLASKSESSIONKEY, GCPURL are environment variables that have to be set/exported
 * Flask's secret key (what I call FLASKSESSIONKEY) can be anything, but it is needed for session data
 * If using Docker:
   * the ngrok command in the Dockerfile is incomplete - it needs the ngrok auth token

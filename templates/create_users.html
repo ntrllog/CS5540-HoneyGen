@@ -1,0 +1,22 @@
+<!doctype html>
+<html class="h-100">
+  <head>
+    <title>Create Some Users</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <style>
+    </style>
+  </head>
+  <body class="h-100">
+    <div class="container w-25 h-100">
+      <h1 class="text-center display-6 pt-5">Create 50,000 fake users!</h1>
+      <form method="post" action="create">
+        <button type="submit" class="btn btn-primary w-100">Go!</button>
+      </form>
+
+{% if msg %}
+        <p class="text-info display-1">{{ msg }}</p>
+{% endif %}
+
+    </div>
+  </body>
+</html>

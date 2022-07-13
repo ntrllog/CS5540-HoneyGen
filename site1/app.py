@@ -5,7 +5,7 @@ from flask_pymongo import PyMongo
 from markupsafe import escape
 
 app = Flask(__name__)
-app.config['MONGO_URI'] = f"mongodb+srv://{os.environ['DBUSERNAME']}:{os.environ['DBPASSWORD']}@cluster0.ndzv4.mongodb.net/test"
+app.config['MONGO_URI'] = os.environ['DBURI']
 app.secret_key = os.environ['FLASKSESSIONKEY']
 
 def get_db():
