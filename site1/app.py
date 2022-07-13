@@ -1,4 +1,4 @@
-import fasttext, random, os
+import fasttext, random, os, requests
 from flask import Flask, render_template, request, current_app, g, session, url_for, redirect
 from werkzeug.local import LocalProxy
 from flask_pymongo import PyMongo
