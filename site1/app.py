@@ -57,7 +57,7 @@ def createaccount():
 @app.post('/forgot')
 def forgotpw():
     username = escape(request.form['username'])
-    user_doc = db.users1.find_one({'username': username})
+    user_doc = db.users.find_one({'username': username})
     password = user_doc['password']
 
     if escape(request.form['actual']) == "true":
@@ -84,7 +84,7 @@ def forgotpw():
 
 @app.post('/getuser')
 def getuser():
-    return list(db.users1.aggregate([{'$sample': {'size': 1}}]))[0]['username']
+    return list(db.users.aggregate([{'$sample': {'size': 1}}]))[0]['username']
 
 '''
 def obfuscate_pw(password):
@@ -96,12 +96,12 @@ def obfuscate_pw(password):
 '''
 
 def verify_user(username, password):
-    user_doc = db.users1.find_one({'username': username})
-    if password == user_doc['password']:
+    user_doc = db.users.find_one({'username': username})
+    if user_doc and password == user_doc['password']:
         return True
     return False
 
 def add_user(username, password):
-    if db.users1.find_one({'username': username}):
+    if db.users.find_one({'username': username}):
         return False
-    return db.users1.insert_one({'username': username, 'password': password})
+    return db.users.insert_one({'username': username, 'password': password})

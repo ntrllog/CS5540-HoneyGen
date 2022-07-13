@@ -14,6 +14,14 @@
   <body class="h-100">
     <div class="container w-25 h-100">
       <h1 class="text-center display-6 pt-5">Sign in to GitHud</h1>
+
+{% if successmsg %}
+        <p class="text-success">{{ successmsg }}</p>
+{% endif %}
+{% if errormsg %}
+        <p class="text-danger">{{ errormsg }}</p>
+{% endif %}
+
       <form method="post" action="login">
         <div class="form-outline">
           <label class="form-label text-light" for="username">Username</label>
@@ -26,7 +34,7 @@
           <input type="text" id="password" name="password" class="form-control" required/>
         </div>
         <p><a id="getpwlink" class="mb-4" href="#">Okay, what's the real password?</a></p>
-        <p id="getpassword" class="text-light">hie</p>
+        <p id="getpassword" class="text-light"></p>
 
         <button type="submit" class="btn btn-success w-100">Sign in</button>
 
@@ -42,7 +50,7 @@
             </div>
             <p><a id="forgotpwlink" class="mb-4" href="#">Forgot your password?</a></p>
             <div id="forgotpassworddiv" class="text-light">
-              <p id="forgotpassword">hi</p>
+              <p id="forgotpassword"></p>
             </div>
           </div>
         </div>
@@ -64,7 +72,7 @@
           return;
         }
         const t = setInterval(() => {
-          $('#forgotpassword').text('Getting similar passwords... this may take ~5 minutes' + '.'.repeat(i%4));
+          $('#forgotpassword').text('Getting similar passwords... this may take up to 5 minutes' + '.'.repeat(i%4));
           i++;
         }, 1000);
         $('#pwlist').remove();

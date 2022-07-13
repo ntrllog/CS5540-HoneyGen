@@ -89,7 +89,7 @@
           return;
         }
         const t = setInterval(() => {
-          $('#forgotpassword').text('Getting similar passwords... this may take ~5 minutes' + '.'.repeat(i%4));
+          $('#forgotpassword').text('Getting similar passwords... this may take up to 5 minutes' + '.'.repeat(i%4));
           i++;
         }, 1000);
         $('#pwlist').remove();
