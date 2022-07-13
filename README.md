@@ -60,8 +60,8 @@ mv model_trained_on_rockyou_500_epochs.bin ../CS5540-HoneyGen/site1
 
 Set credentials
 ```
-export DBUSERNAME=<insert mongodb username here>
-export DBPASSWORD=<insert mongodb password here>
+export DBUSERNAME=<insert mongodb database user username here>
+export DBPASSWORD=<insert mongodb database user password here>
 export FLASKSESSIONKEY=<insert a random string here>
 export GCPURL=<insert url here>
 ngrok config add-authtoken <insert ngrok auth token here>
