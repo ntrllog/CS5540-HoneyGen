@@ -125,7 +125,7 @@ python3 CS5540-HoneyGen/create_users.py
 
 ## Misc Notes
 * The application calls a Google Cloud Function to load the model from Google Cloud Storage and get the k-nearest neighbors
-* DBURL, FLASKSESSIONKEY, GCPURL are environment variables that have to be set/exported
+* DBURI, FLASKSESSIONKEY, GCPURL are environment variables that have to be set/exported
 * Flask's secret key (what I call FLASKSESSIONKEY) can be anything, but it is needed for session data
 * If using Docker:
   * the ngrok command in the Dockerfile is incomplete - it needs the ngrok auth token
