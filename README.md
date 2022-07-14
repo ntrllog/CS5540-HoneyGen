@@ -31,8 +31,9 @@ Linux Packages:
 ## External Services That Need to Be Created
 Database:
 * MongoDB
-  * database named test
-  * collections named results, users
+  * 1 database named test
+  * 10 collections named results_w1_k1, results_w1_k2, results_w1_k3, results_w2_k1, results_w2_k2, results_w2_k3, results_w3_k1, results_w3_k2, results_w3_k3, users
+    * results_w1_k1 stores the results for using 1 website and k = 1
   * don't forget network access configuration!
 
 Cloud Hosting:

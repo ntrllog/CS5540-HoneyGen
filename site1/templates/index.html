@@ -25,7 +25,7 @@
       <form method="post" action="login">
         <div class="form-outline">
           <label class="form-label text-light" for="username">Username</label>
-          <input type="text" id="username" name="username" class="form-control" />
+          <input type="text" id="username" name="username" class="form-control" required/>
         </div>
         <p><a id="getuserlink" class="mb-4" href="#">Let me guess a password!</a></p>
 
@@ -36,13 +36,18 @@
         <p><a id="getpwlink" class="mb-4" href="#">Okay, what's the real password?</a></p>
         <p id="getpassword" class="text-light"></p>
 
+        <div class="form-outline mb-4">
+          <label class="form-label text-light" for="numwebsites">Number of Websites Used</label>
+          <input type="number" id="numwebsites" name="numwebsites" class="form-control" min="1" max="3" required/>
+        </div>
+
         <button type="submit" class="btn btn-success w-100">Sign in</button>
 
         <div class="border mt-4 rounded">
           <div class="p-3">
             <div class="form-outline">
-              <input type="number" id="k" name="k" class="form-control" />
-              <label class="form-label text-light" for="k">k (number of total passwords &lt; 6 to return)</label>
+              <input type="number" id="k" name="k" class="form-control" min="1" max="3" required/>
+              <label class="form-label text-light" for="k">k (number of total passwords &le; 3 to return)</label>
             </div>
             <div class="form-check">
               <input class="form-check-input" type="checkbox" value="" id="include">
@@ -67,8 +72,8 @@
           alert('Username required!');
           return;
         }
-        if (!$('#k').val() || $('#k').val() > 5) {
-          alert('k required and <= 5');
+        if (!$('#k').val() || $('#k').val() > 3 || $('#k').val() < 0) {
+          alert('k required and <= 3');
           return;
         }
         const t = setInterval(() => {

@@ -28,15 +28,17 @@ def index():
 def login():
     username = escape(request.form['username'])
     password = escape(request.form['password'])
-    results_doc = db.results.find_one({'username': username})
+    num_websites = int(request.form['numwebsites'])
+    k = int(request.form['k'])
+    results_doc = db[f"results_w{num_websites}_k{k}"].find_one({'username': username})
     if not results_doc:
         results_doc = {'username': username, 'success': 0, 'failures': 0}
-        db.results.insert_one(results_doc)
+        db[f"results_w{num_websites}_k{k}"].insert_one(results_doc)
     if verify_user(username, password):
-        db.results.update_one({'username': username}, {'$inc': {'success': 1}})
+        db[f"results_w{num_websites}_k{k}"].update_one({'username': username}, {'$inc': {'success': 1}})
         session['successmsg'] = 'Success!'
     else:
-        db.results.update_one({'username': username}, {'$inc': {'failures': 1}})
+        db[f"results_w{num_websites}_k{k}"].update_one({'username': username}, {'$inc': {'failures': 1}})
         session['errormsg'] = 'Invalid username or password!'
     return redirect(url_for('index'))
 
@@ -64,7 +66,7 @@ def forgotpw():
         return password
 
     k = int(request.form['k']) if 'k' in request.form else 2
-    k = k if k <= 5 else 5
+    k = k if k <= 3 else 3
     k = k if k > 0 else 1
 
     include_actual = escape(request.form['include_actual'])
