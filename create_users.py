@@ -1,3 +1,4 @@
+import uuid
 from flask import Flask, render_template, current_app, g, url_for, redirect
 from flask_pymongo import PyMongo
 from werkzeug.local import LocalProxy
@@ -20,16 +21,25 @@ def index(msg=''):
 
 @app.post('/create')
 def create_users():
-    if db.users.count() >= 50000:
+    if db.users.count() >= 100000:
         return redirect(url_for('index', msg='Too many users exist already!'))
 
     with open('zynga-com_sorted_preprocessed.txt') as f:
-        i = 1
         lines = f.read().splitlines()
         for line in lines:
-            username = f"user{i}"
-            i += 1
-            db.users.insert_one({'username': username, 'password': line})
+            username = str(uuid.uuid4())
+            loop = True
+            while loop:
+                if db.users.find_one({'username': username}):
+                    username = str(uuid.uuid4())
+                else:
+                    loop = False
+            try:
+                db.users.insert_one({'username': username, 'password': line})
+            except:
+                print(username)
+                print(line)
+                break
 
     return redirect(url_for('index', msg='Done!'))
 
