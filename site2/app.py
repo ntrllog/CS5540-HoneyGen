@@ -88,6 +88,38 @@ def forgotpw():
 def getuser():
     return list(db.users.aggregate([{'$sample': {'size': 1}}]))[0]['username']
 
+@app.route('/results')
+def showresults():
+    w1_k1_results = list(db.results_w1_k1.aggregate([{"$group": {"_id": None, "s_total": {"$sum": "$success"}, "f_total": {"$sum": "$failures"}}}]))
+    w1_k1_s = w1_k1_results[0]['s_total'] if len(w1_k1_results) > 0 else 0
+    w1_k1_f = w1_k1_results[0]['f_total'] if len(w1_k1_results) > 0 else 0
+    w1_k2_results = list(db.results_w1_k2.aggregate([{"$group": {"_id": None, "s_total": {"$sum": "$success"}, "f_total": {"$sum": "$failures"}}}]))
+    w1_k2_s = w1_k2_results[0]['s_total'] if len(w1_k2_results) > 0 else 0
+    w1_k2_f = w1_k2_results[0]['f_total'] if len(w1_k2_results) > 0 else 0
+    w1_k3_results = list(db.results_w1_k3.aggregate([{"$group": {"_id": None, "s_total": {"$sum": "$success"}, "f_total": {"$sum": "$failures"}}}]))
+    w1_k3_s = w1_k3_results[0]['s_total'] if len(w1_k3_results) > 0 else 0
+    w1_k3_f = w1_k3_results[0]['f_total'] if len(w1_k3_results) > 0 else 0
+    w2_k1_results = list(db.results_w2_k1.aggregate([{"$group": {"_id": None, "s_total": {"$sum": "$success"}, "f_total": {"$sum": "$failures"}}}]))
+    w2_k1_s = w2_k1_results[0]['s_total'] if len(w2_k1_results) > 0 else 0
+    w2_k1_f = w2_k1_results[0]['f_total'] if len(w2_k1_results) > 0 else 0
+    w2_k2_results = list(db.results_w2_k2.aggregate([{"$group": {"_id": None, "s_total": {"$sum": "$success"}, "f_total": {"$sum": "$failures"}}}]))
+    w2_k2_s = w2_k2_results[0]['s_total'] if len(w2_k2_results) > 0 else 0
+    w2_k2_f = w2_k2_results[0]['f_total'] if len(w2_k2_results) > 0 else 0
+    w2_k3_results = list(db.results_w2_k3.aggregate([{"$group": {"_id": None, "s_total": {"$sum": "$success"}, "f_total": {"$sum": "$failures"}}}]))
+    w2_k3_s = w2_k3_results[0]['s_total'] if len(w2_k3_results) > 0 else 0
+    w2_k3_f = w2_k3_results[0]['f_total'] if len(w2_k3_results) > 0 else 0
+    w3_k1_results = list(db.results_w3_k1.aggregate([{"$group": {"_id": None, "s_total": {"$sum": "$success"}, "f_total": {"$sum": "$failures"}}}]))
+    w3_k1_s = w3_k1_results[0]['s_total'] if len(w3_k1_results) > 0 else 0
+    w3_k1_f = w3_k1_results[0]['f_total'] if len(w3_k1_results) > 0 else 0
+    w3_k2_results = list(db.results_w3_k2.aggregate([{"$group": {"_id": None, "s_total": {"$sum": "$success"}, "f_total": {"$sum": "$failures"}}}]))
+    w3_k2_s = w3_k2_results[0]['s_total'] if len(w3_k2_results) > 0 else 0
+    w3_k2_f = w3_k2_results[0]['f_total'] if len(w3_k2_results) > 0 else 0
+    w3_k3_results = list(db.results_w3_k3.aggregate([{"$group": {"_id": None, "s_total": {"$sum": "$success"}, "f_total": {"$sum": "$failures"}}}]))
+    w3_k3_s = w3_k3_results[0]['s_total'] if len(w3_k3_results) > 0 else 0
+    w3_k3_f = w3_k3_results[0]['f_total'] if len(w3_k3_results) > 0 else 0
+
+    return render_template('show_results.html', data=[[w1_k1_s, w1_k2_s, w1_k3_s, w2_k1_s, w2_k2_s, w2_k3_s, w3_k1_s, w3_k2_s, w3_k3_s],[w1_k1_f, w1_k2_f, w1_k3_f, w2_k1_f, w2_k2_f, w2_k3_f, w3_k1_f, w3_k2_f, w3_k3_f]])
+
 '''
 def obfuscate_pw(password):
     o = list(password)
