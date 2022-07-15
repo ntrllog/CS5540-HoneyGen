@@ -26,7 +26,10 @@ Python:
 * requests = 2.28.1
 
 Linux Packages:
-* ngrok (only if running in production setting)
+* npm (only if running in production setting)
+
+Node Packages:
+* localtunnel (only if running in production setting)
 
 ## External Services That Need to Be Created
 Database:
@@ -39,7 +42,7 @@ Database:
 Cloud Hosting:
 * Google Cloud
   * Cloud Storage
-    * one bucket that contains the 4 models
+    * one bucket that contains the 4 models (see Generating Models section)
       * make sure bucket and model names are changed when creating the function
   * Cloud Function
     * combined model - 4gb memory, timeout >= 300s
@@ -47,19 +50,15 @@ Cloud Hosting:
     * third model - 16gb memory, timeout >= 300s
     * half model - 32gb memory, timeout >= 300s
   * Compute Engine
-    * VM instance with 2cpu, 2gb memory
-* ngrok
-  * used to expose localhost to public
-  * free tier only allows one active session at a time
+    * VM instance with 2cpu, 4gb memory
 
 ## Commands to Set Up and Run On Ubuntu Machine
 Install stuff
 ```
 sudo apt -y update && sudo apt -y upgrade
-sudo apt -y install python3-pip supervisor
+sudo apt -y install python3-pip supervisor npm
 sudo pip3 install flask pymongo flask-pymongo fasttext gunicorn requests
 sudo pip3 install pymongo[srv]
-curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null && echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list && sudo apt -y update && sudo apt install -y ngrok
 ```
 
 Get the code
@@ -73,7 +72,6 @@ Set credentials
 export DBURI=<insert mongodb connection string here>
 export FLASKSESSIONKEY=<insert a random string here>
 export GCPURL=<insert url here>
-ngrok config add-authtoken <insert ngrok auth token here>
 ```
   * GCPURL is the url of the cloud function
 
@@ -86,15 +84,15 @@ flask run
 Run it!
 ```
 cd CS5540-HoneyGen/site1/
-sudo mv gunicorn.conf /etc/supervisor/conf.d/gunicorn.conf
-sudo mv ngrok.conf /etc/supervisor/conf.d/ngrok.conf
+sudo mv gunicorn.conf /etc/supervisor/conf.d/
+sudo mv localtunnel.conf /etc/supervisor/conf.d/
 sudo unlink /var/run/supervisor.sock
 sudo -E supervisord
 sudo supervisorctl status
-vim /var/log/ngrok.log
+vim /var/log/localtunnel.log
 ```
   * if `sudo unlink /var/run/supervisor.sock` returns an error, that is okay
-  * the public url is in ngrok.log
+  * the public url is in localtunnel.log
 
 Stop it!
 ```
