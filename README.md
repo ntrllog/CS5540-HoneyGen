@@ -61,7 +61,7 @@ sudo pip3 install flask pymongo flask-pymongo fasttext gunicorn requests
 sudo pip3 install pymongo[srv]
 sudo npm -g install localtunnel
 ```
-  * the command to install npm will be different on older versions of Ubuntu; see Dockerfile for npm installation command
+  * the command to install npm will be different on older versions of Ubuntu
 
 Get the code
 ```
