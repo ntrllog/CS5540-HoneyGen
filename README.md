@@ -52,22 +52,25 @@ Cloud Hosting:
   * Compute Engine
     * VM instance with 2cpu, 4gb memory
 
-## Commands to Set Up and Run On Ubuntu Machine
+## Commands to Set Up and Run On Ubuntu 22.04
 Install stuff
 ```
 sudo apt -y update && sudo apt -y upgrade
 sudo apt -y install python3-pip supervisor npm
 sudo pip3 install flask pymongo flask-pymongo fasttext gunicorn requests
 sudo pip3 install pymongo[srv]
+sudo npm -g install localtunnel
 ```
+  * the command to install npm will be different on older versions of Ubuntu; see Dockerfile for npm installation command
 
 Get the code
 ```
 git clone https://github.com/ntrllog/CS5540-HoneyGen.git
 git clone https://bitbucket.org/srecgrp/honeygen-generating-honeywords-using-representation-learning.git
 ```
+  * clone second repo only if generating models (see Generating Models section)
 
-Set credentials
+Set environment variables
 ```
 export DBURI=<insert mongodb connection string here>
 export FLASKSESSIONKEY=<insert a random string here>
@@ -100,14 +103,15 @@ sudo supervisorctl stop all
 sudo unlink /var/run/supervisor.sock
 ```
 
-## Generating Models (for running on a local machine)
+## Generating Models
+The FastText models are too large (max 12gb for largest model) to store in this repo. Generate models to run locally or upload to Google Cloud Storage.
 ```
 cd honeygen-generating-honeywords-using-representation-learning/
 python3 FastText.py
 ```
 
 ### Combined Model
-All the passwords from each website in password_lists_processed_50000_records/ combined into one list
+All the passwords from each website in password_lists_processed_50000_records/ combined into one list. The similarity of passwords generated using this model is not good, but it is the smallest model.
 ```
 cd honeygen-generating-honeywords-using-representation-learning/
 cat password_lists_processed_50000_records/* > password_lists_processed_50000_records/combined.txt
@@ -116,7 +120,7 @@ python3 FastText.py
   * replace code in FastText.py accordingly
 
 ### Reduced RockYou Model
-Use only 1/4, 1/3, 1/2, 3/4 of the RockYou list for a smaller model
+Use only 1/4, 1/3, 1/2, 3/4 of the RockYou list for a smaller model. Better similarity than the combined model.
 ```
 mv CS5540-HoneyGen/less.py honeygen-generating-honeywords-using-representation-learning/password_lists_processed/
 python3 less.py
@@ -132,7 +136,7 @@ cp honeygen-generating-honeywords-using-representation-learning/password_lists_p
 cd CS5540-HoneyGen/
 python3 create_users.py
 ```
-  * this is also a Flask web app, so either run this on localhost or ngrok this
+  * this is also a Flask web app, so either run this on localhost or localtunnel this
 
 ## Misc Notes
 * The application calls a Google Cloud Function to load the model from Google Cloud Storage and get the k-nearest neighbors
