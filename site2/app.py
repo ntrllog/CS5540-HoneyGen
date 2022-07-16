@@ -69,13 +69,10 @@ def forgotpw():
     k = k if k <= 3 else 3
     k = k if k > 0 else 1
 
-    include_actual = escape(request.form['include_actual'])
-
-    honeywords = requests.post(os.environ['GCPURL'], json={'password': password, 'k': k, 'include_actual': include_actual}).text.split(',')
+    honeywords = requests.post(os.environ['GCPURL'], json={'password': password, 'k': k}).text.split(',')
     '''
     honeywords=[]
-    if include_actual == 'true':
-        honeywords.append(obfuscate_pw(password))
+    honeywords.append(obfuscate_pw(password))
     if k-len(honeywords) > 0:
         model = fasttext.load_model("model_trained_on_rockyou_500_epochs.bin")
         temp = model.get_nearest_neighbors(password,k=(k-len(honeywords)))

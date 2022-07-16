@@ -55,10 +55,6 @@
                 <input type="number" id="k" name="k" class="form-control" min="1" max="3" required/>
                 <label class="form-label text-light" for="k">k (number of total passwords &le; 3 to return)</label>
               </div>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="include">
-                <label class="form-check-label text-light" for="include">Include actual password</label>
-              </div>
               <p><a id="forgotpwlink" class="mb-4" href="#">Forgot your password?</a></p>
             </div>
           </div>
@@ -108,8 +104,7 @@
           data: {
             username: $('#username').val(),
             actual: "false",
-            k: $('#k').val(),
-            include_actual: $("#include").is(':checked')
+            k: $('#k').val()
           },
           success: function(pwlist) {
             clearInterval(t);
