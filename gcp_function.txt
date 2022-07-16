@@ -27,7 +27,8 @@ def download_bin_file():
     blob.download_to_filename(folder + "model_trained_on_rockyou_500_epochs.bin")
 
 def get_honeywords(password, k):
-    download_bin_file()
+    if k > 1:
+        download_bin_file()
 
     honeywords = []
     honeywords.append(obfuscate_pw(password))
