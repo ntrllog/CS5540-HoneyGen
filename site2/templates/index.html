@@ -1,5 +1,5 @@
 <!doctype html>
-<html class="h-100">
+<html>
   <head>
     <title>Discorl</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
@@ -23,7 +23,7 @@
       }
     </style>
   </head>
-  <body class="h-100">
+  <body>
     <div class="container d-flex flex-column justify-content-center align-items-center w-50 h-100">
       <form class="w-100 p-5" method="post" action="login">
         <h2 class="text-center text-light">Welcome back!</h2>
@@ -48,17 +48,20 @@
           <label class="form-label text-light" for="password">Password</label>
         </div>
 
-        <div class="d-flex justify-content-between mb-4">
-          <div class="border">
-            <div class="p-3">
-              <div class="form-outline">
-                <input type="number" id="k" name="k" class="form-control" min="1" max="3" required/>
-                <label class="form-label text-light" for="k">k (number of total passwords &le; 3 to return)</label>
-              </div>
-              <p><a id="forgotpwlink" class="mb-4" href="#">Forgot your password?</a></p>
+        <p><a id="getpwlink" class="mb-4" href="#">Okay, what's the real password?</a></p>
+        <p id="getpassword" class="text-light"></p>
+
+        <div class="mb-4 border">
+          <div class="p-3">
+            <div class="form-outline">
+              <input type="number" id="k" name="k" class="form-control" min="1" max="3" required/>
+              <label class="form-label text-light" for="k">k (number of total passwords &le; 3 to return)</label>
             </div>
+            <p><a id="forgotpwlink" class="mb-4" href="#">Forgot your password?</a></p>
           </div>
-          <p><a id="getpwlink" class="mb-4" href="#">Okay, what's the real password?</a></p>
+          <div id="forgotpassworddiv" class="text-light">
+            <p id="forgotpassword"></p>
+          </div>
         </div>
 
         <div class="form-outline mb-4">
@@ -73,12 +76,6 @@
         <div class="d-flex justify-content-center align-items-center border mt-4 p-2 rounded">
           <a href="results">Show Results</a>
         </div>
-
-        <div id="forgotpassworddiv" class="text-light">
-          <p id="forgotpassword"></p>
-        </div>
-
-        <p id="getpassword" class="text-light"></p>
       </form>
 
     </div>
