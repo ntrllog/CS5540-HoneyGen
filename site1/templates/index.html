@@ -29,12 +29,10 @@
         </div>
         <p><a id="getuserlink" class="mb-4" href="#">Let me guess a password!</a></p>
 
-        <div class="form-outline">
+        <div class="form-outline mb-4">
           <label class="form-label text-light" for="password">Password</label>
           <input type="text" id="password" name="password" class="form-control" required/>
         </div>
-        <p><a id="getpwlink" class="mb-4" href="#">Okay, what's the real password?</a></p>
-        <p id="getpassword" class="text-light"></p>
 
         <div class="form-outline mb-4">
           <label class="form-label text-light" for="numwebsites">Number of Websites Used</label>
@@ -104,24 +102,6 @@
             $('#forgotpassword').text(jqXHR.responseText);
           }
         });
-      });
-
-      $('#getpwlink').click(function() {
-        if (!$('#username').val()) {
-          alert('Username required!');
-        } else {
-          $.ajax({
-            type: 'POST',
-            url: '/forgot',
-            data: {
-              username: $('#username').val(),
-              actual: "true"
-            },
-            success: function(pw) {
-              $('#getpassword').text('Your password is: ' + pw);
-            }
-          });
-        }
       });
 
       $('#getuserlink').click(function() {

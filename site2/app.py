@@ -62,9 +62,6 @@ def forgotpw():
     user_doc = db.users.find_one({'username': username})
     password = user_doc['password']
 
-    if escape(request.form['actual']) == "true":
-        return password
-
     k = int(request.form['k']) if 'k' in request.form else 2
     k = k if k <= 3 else 3
     k = k if k > 0 else 1
