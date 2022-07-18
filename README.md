@@ -26,10 +26,7 @@ Python:
 * requests = 2.28.1
 
 Linux Packages:
-* npm (only if running in production setting)
-
-Node Packages:
-* localtunnel (only if running in production setting)
+* ngrok (only if running in production setting)
 
 ## External Services That Need to Be Created
 Database:
@@ -51,15 +48,18 @@ Cloud Hosting:
     * half model - 32gb memory, timeout >= 300s
   * Compute Engine
     * VM instance with 2cpu, 4gb memory
+* ngrok
+  * used to expose localhost to public
+  * free tier only allows one active session at a time
 
 ## Commands to Set Up and Run On Ubuntu 22.04
 Install stuff
 ```
 sudo apt -y update && sudo apt -y upgrade
-sudo apt -y install python3-pip supervisor npm
+sudo apt -y install python3-pip supervisor
 sudo pip3 install flask pymongo flask-pymongo fasttext gunicorn requests
 sudo pip3 install pymongo[srv]
-sudo npm -g install localtunnel
+curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null && echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list && sudo apt -y update && sudo apt install -y ngrok
 ```
   * the command to install npm will be different on older versions of Ubuntu
 
@@ -75,6 +75,7 @@ Set environment variables
 export DBURI=<insert mongodb connection string here>
 export FLASKSESSIONKEY=<insert a random string here>
 export GCPURL=<insert url here>
+ngrok config add-authtoken <insert ngrok auth token here>
 ```
   * GCPURL is the url of the cloud function
 
@@ -88,14 +89,14 @@ Run it!
 ```
 cd CS5540-HoneyGen/site1/
 sudo mv gunicorn.conf /etc/supervisor/conf.d/
-sudo mv localtunnel.conf /etc/supervisor/conf.d/
+sudo mv ngrok.conf /etc/supervisor/conf.d/
 sudo unlink /var/run/supervisor.sock
 sudo -E supervisord
 sudo supervisorctl status
-vim /var/log/localtunnel.log
+vim /var/log/ngrok.log
 ```
   * if `sudo unlink /var/run/supervisor.sock` returns an error, that is okay
-  * the public url is in localtunnel.log
+  * the public url is in ngrok.log
 
 Stop it!
 ```
