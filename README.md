@@ -52,7 +52,7 @@ Cloud Hosting:
   * used to expose localhost to public
   * free tier only allows one active session at a time
 
-## Commands to Set Up and Run On Ubuntu 22.04
+## Commands to Set Up and Run On Ubuntu
 Install stuff
 ```
 sudo apt -y update && sudo apt -y upgrade
@@ -61,7 +61,6 @@ sudo pip3 install flask pymongo flask-pymongo fasttext gunicorn requests
 sudo pip3 install pymongo[srv]
 curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null && echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list && sudo apt -y update && sudo apt install -y ngrok
 ```
-  * the command to install npm will be different on older versions of Ubuntu
 
 Get the code
 ```
