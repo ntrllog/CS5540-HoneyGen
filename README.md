@@ -21,7 +21,7 @@ Python:
 * flask-pymongo = 2.3.0
 * pymongo = 3.12.0
 * pymongo[srv]
-* fasttext = 0.9.2
+* fasttext = 0.9.2 (only if generating models - see Generating Models section)
 * gunicorn = 20.1.0 (only if running in production setting)
 * requests = 2.28.1
 

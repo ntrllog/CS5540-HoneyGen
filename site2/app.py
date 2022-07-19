@@ -43,20 +43,6 @@ def login():
         session['errormsg'] = 'Invalid username or password!'
     return redirect(url_for('index'))
 
-@app.get('/create')
-def createpage():
-    return render_template('create.html')
-
-@app.post('/create')
-def createaccount():
-    username = escape(request.form['username'])
-    password = escape(request.form['password'])
-    if add_user(username, password):
-        session['successmsg'] = 'Account Created!'
-        return redirect(url_for('index'))
-    session['errormsg'] = 'Username already exists!'
-    return redirect(url_for('login'))
-
 @app.post('/forgot')
 def forgotpw():
     username = escape(request.form['username'])
@@ -130,8 +116,3 @@ def verify_user(username, password):
     if user_doc and password == user_doc['password']:
         return True
     return False
-
-def add_user(username, password):
-    if db.users.find_one({'username': username}):
-        return False
-    return db.users.insert_one({'username': username, 'password': password})
