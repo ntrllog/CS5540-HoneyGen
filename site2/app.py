@@ -1,4 +1,5 @@
-import fasttext, random, os, requests
+# import fasttext
+import random, os, requests
 from flask import Flask, render_template, request, current_app, g, session, url_for, redirect
 from werkzeug.local import LocalProxy
 from flask_pymongo import PyMongo
@@ -75,6 +76,7 @@ def forgotpw():
         temp = model.get_nearest_neighbors(password,k=(k-len(honeywords)))
         for element in temp:
             honeywords.append(obfuscate_pw(element[1]))
+    random.shuffle(honeywords)
     '''
     return {e: 0 for e in honeywords}
 
