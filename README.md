@@ -83,6 +83,11 @@ Test it!
 cd CS5540-HoneyGen/site1/
 flask run
 ```
+  * to run another website simultaneously:
+     ```
+     cd CS5540-HoneyGen/site2/
+     flask run -p 5001
+     ```
 
 Run it!
 ```
