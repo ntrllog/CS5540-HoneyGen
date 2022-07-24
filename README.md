@@ -2,19 +2,9 @@
 
 A Flask web app that implements a proposed idea for using representation learning models for password recovery. Enter a username and it returns the top k-nearest neighbors of the user's password obfuscated with stars (`*`).
 
-```
-@inproceedings{dionysiou2021honeygen,
-  title={HoneyGen: Generating Honeywords Using Representation Learning},
-  author={Dionysiou, Antreas and Vassiliades, Vassilis and Athanasopoulos, Elias},
-  booktitle={Proceedings of the 2021 ACM Asia Conference on Computer and Communications Security},
-  pages={265--279},
-  year={2021}
-}
-```
+Idea was suggested by Dionysiou et al. in their paper: HoneyGen: Generating Honeywords Using Representation Learning. Their [source code](https://bitbucket.org/srecgrp/honeygen-generating-honeywords-using-representation-learning/src/master/) was also used and modified.
 
-Their [source code](https://bitbucket.org/srecgrp/honeygen-generating-honeywords-using-representation-learning/src/master/) was also used and modified.
-
-## Required Packages
+## Packages
 Python:
 * python = 3.8.10
 * flask = 2.0.3
@@ -22,11 +12,7 @@ Python:
 * pymongo = 3.12.0
 * pymongo[srv]
 * fasttext = 0.9.2 (only if generating models - see Generating Models section)
-* gunicorn = 20.1.0 (only if running in production setting)
 * requests = 2.28.1
-
-Linux Packages:
-* ngrok (only if running in production setting)
 
 ## External Services That Need to Be Created
 Database:
@@ -39,27 +25,21 @@ Database:
 Cloud Hosting:
 * Google Cloud
   * Cloud Storage
-    * one bucket that contains the 4 models (see Generating Models section)
+    * one bucket that contains the models (see Generating Models section)
       * make sure bucket and model names are changed when creating the function
   * Cloud Function
     * combined model - 4gb memory, timeout >= 300s
     * quarter model - 16gb memory, timeout >= 300s
     * third model - 16gb memory, timeout >= 300s
     * half model - 32gb memory, timeout >= 300s
-  * Compute Engine
-    * VM instance with 2cpu, 4gb memory
-* ngrok
-  * used to expose localhost to public
-  * free tier only allows one active session at a time
 
 ## Commands to Set Up and Run On Ubuntu
 Install stuff
 ```
 sudo apt -y update && sudo apt -y upgrade
-sudo apt -y install python3-pip supervisor
-sudo pip3 install flask pymongo flask-pymongo fasttext gunicorn requests
+sudo apt -y install python3-pip
+sudo pip3 install flask pymongo flask-pymongo fasttext requests
 sudo pip3 install pymongo[srv]
-curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null && echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list && sudo apt -y update && sudo apt install -y ngrok
 ```
 
 Get the code
@@ -74,7 +54,6 @@ Set environment variables
 export DBURI=<insert mongodb connection string here>
 export FLASKSESSIONKEY=<insert a random string here>
 export GCPURL=<insert url here>
-ngrok config add-authtoken <insert ngrok auth token here>
 ```
   * GCPURL is the url of the cloud function
 
@@ -89,24 +68,22 @@ flask run
      flask run -p 5001
      ```
 
-Run it!
-```
-cd CS5540-HoneyGen/site1/
-sudo mv gunicorn.conf /etc/supervisor/conf.d/
-sudo mv ngrok.conf /etc/supervisor/conf.d/
-sudo unlink /var/run/supervisor.sock
-sudo -E supervisord
-sudo supervisorctl status
-vim /var/log/ngrok.log
-```
-  * if `sudo unlink /var/run/supervisor.sock` returns an error, that is okay
-  * the public url is in ngrok.log
-
-Stop it!
-```
-sudo supervisorctl stop all
-sudo unlink /var/run/supervisor.sock
-```
+### Running It in a "Production" Setting
+These are independent of each other and not steps to be run in order.
+* Install and use gunicorn instead of flask's server
+* Install and use ngrok to have it accessible from anywhere via a url
+* Install and use supervisord to keep it running after leaving the terminal and to have it restarted if it gets interrupted
+  * ```
+    cd CS5540-HoneyGen/site1/
+    sudo mv gunicorn.conf /etc/supervisor/conf.d/
+    sudo mv ngrok.conf /etc/supervisor/conf.d/
+    sudo unlink /var/run/supervisor.sock
+    sudo -E supervisord
+    sudo supervisorctl status
+    vim /var/log/ngrok.log
+    ```
+      * if `sudo unlink /var/run/supervisor.sock` returns an error, that is okay
+      * the public url is in ngrok.log
 
 ## Generating Models
 The FastText models are too large (max 12gb for largest model) to store in this repo. Generate models to run locally or upload to Google Cloud Storage.
@@ -114,6 +91,17 @@ The FastText models are too large (max 12gb for largest model) to store in this 
 cd honeygen-generating-honeywords-using-representation-learning/
 python3 FastText.py
 ```
+
+### Reduced RockYou Model
+Use only 1/4, 1/3, 1/2, 3/4 of the RockYou list for a smaller model. Better similarity than the combined model (below).
+```
+mv CS5540-HoneyGen/less.py honeygen-generating-honeywords-using-representation-learning/password_lists_processed/
+python3 less.py
+cd honeygen-generating-honeywords-using-representation-learning/
+python3 FastText.py
+```
+  * replace code in FastText.py accordingly
+  * modify less.py to generate custom preprocessed.txt files
 
 ### Combined Model
 All the passwords from each website in password_lists_processed_50000_records/ combined into one list. The similarity of passwords generated using this model is not good, but it is the smallest model.
@@ -124,24 +112,13 @@ python3 FastText.py
 ```
   * replace code in FastText.py accordingly
 
-### Reduced RockYou Model
-Use only 1/4, 1/3, 1/2, 3/4 of the RockYou list for a smaller model. Better similarity than the combined model.
-```
-mv CS5540-HoneyGen/less.py honeygen-generating-honeywords-using-representation-learning/password_lists_processed/
-python3 less.py
-cd honeygen-generating-honeywords-using-representation-learning/
-python3 FastText.py
-```
-  * replace code in FastText.py accordingly
-  * modify less.py to generate custom preprocessed.txt files
-
 ## Prepopulating Database With Fake Users
 ```
 cp honeygen-generating-honeywords-using-representation-learning/password_lists_processed_50000_records/zynga-com_sorted_preprocessed.txt CS5540-HoneyGen/
 cd CS5540-HoneyGen/
 python3 create_users.py
 ```
-  * this is also a Flask web app, so either run this on localhost or localtunnel this
+  * this is also a Flask web app, so run this on localhost
 
 ## Misc Notes
 * The application calls a Google Cloud Function to load the model from Google Cloud Storage and get the k-nearest neighbors
