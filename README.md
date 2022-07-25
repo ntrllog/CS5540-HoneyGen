@@ -14,7 +14,7 @@ Python:
 * fasttext = 0.9.2 (only if generating models - see Generating Models section)
 * requests = 2.28.1
 
-## External Services That Need to Be Created
+## External Services
 Database:
 * MongoDB
   * 1 database named test
@@ -22,7 +22,7 @@ Database:
     * results_w1_k1 stores the results for using 1 website and k = 1
   * don't forget network access configuration!
 
-Cloud Hosting:
+Cloud Hosting (if local machine doesn't have enough capacity):
 * Google Cloud
   * Cloud Storage
     * one bucket that contains the models (see Generating Models section)
