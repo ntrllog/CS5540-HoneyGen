@@ -61,12 +61,12 @@ def forgotpw():
 
     ''' uncomment this if not using GCP
     honeywords=[]
-    honeywords.append(obfuscate_pw(password))
+    honeywords.append(password)
     if k-len(honeywords) > 0:
         model = fasttext.load_model("model_trained_on_rockyou_500_epochs.bin")
         temp = model.get_nearest_neighbors(password,k=(k-len(honeywords)))
         for element in temp:
-            honeywords.append(obfuscate_pw(element[1]))
+            honeywords.append(element[1])
     random.shuffle(honeywords)
     '''
 
