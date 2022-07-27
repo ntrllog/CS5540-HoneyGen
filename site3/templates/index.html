@@ -1,0 +1,227 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Login to your account</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>
+      *{
+       margin: 0;
+       padding: 0;
+       box-sizing: border-box;
+       font-family: 'Open Sans', sans-serif;
+       }
+
+      .wrapper{
+       width: 100%;
+       height: 100vh;
+       background: url("https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80") no-repeat;
+       background-size: cover;
+       background-attachment: fixed;
+       background-position: center;
+       }
+
+      .loginform{
+       position: absolute;
+       top: 50%;
+       left: 50%;
+       transform: translate(-50%,-50%);
+       max-width: 380px;
+       width: 100%;
+       height: auto;
+       border-radius: 5px;
+       padding: 40px 30px 40px 0;
+       box-shadow: -4px -4px 11px #c8c2c2a2,
+                   4px 4px 9px rgba(147, 149, 151, 0.871);
+       }
+
+      .loginform .title{
+       font-size: 32px;
+       text-transform: uppercase;
+       font-weight: bold;
+       text-align: center;
+       color: #c9c3cd;
+       margin-bottom: 35px;
+       }
+       
+      .form-outline{
+       margin-bottom: 35px;
+       position: relative;
+       }
+
+      .form-outline .form-control{
+       width: 100%;
+       padding: 16px;
+       padding-left: 80px;
+       font-size: 18px;
+       text-align: center;
+       border: transparent;
+       color: #fff;
+       border-top-right-radius: 5px;
+       border-bottom-right-radius: 5px;
+       background: rgba(105, 105, 105, 0.55);
+       outline: none;
+       }
+
+      .form-outline .fas{
+       position: absolute;
+       top: 18px;
+       left: 35px;
+       font-size: 20px;
+       color: #fff;
+       }
+
+      .form-outline:after{
+       content: "";
+       position: absolute;
+       top: 0;
+       left: 0;
+       width: 10px;
+       height: 100%;
+       background: #bfb7b7;
+       }
+
+      .form-outline:before{
+       content: "";
+       position: absolute;
+       top: 6px;
+       left: 70px;
+       width: 2px;
+       height: 80%;
+       background: #d4cfd9;
+       }
+
+      .btn{
+       width: 200px;
+       background: rgba(163, 159, 159, 0.55);
+       margin: 0 auto;
+       text-align: center;
+       border-radius: 5px;
+       padding: 12px;
+       text-transform: uppercase;
+       font-size: 24px;
+       }
+
+      .btn a{
+       color: #fff;
+       text-decoration: none;
+       font-size: 24px;
+       }
+
+    </style>
+  </head>
+
+  <body>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+
+  <div class="wrapper">
+   <form method="post" action="login">
+    <div class="loginform">  
+                               
+        <div class="title">
+            <h1>Login</h1>
+        </div>
+
+{% if successmsg %}
+        <p class="text-success">{{ successmsg }}</p>
+{% endif %}
+{% if errormsg %}
+        <p class="text-danger">{{ errormsg }}</p>
+{% endif %}
+
+        <div class="form-outline">
+            <input type="text" placeholder="Username" id="username" name="username" class="form-control" required/>
+            <i class="fas fa-user"></i>
+        </div>
+
+        <p><a id="getuserlink" class="mb-4" href="javascript:void(0);">Let me guess a password!</a></p>
+
+        <div class="form-outline">
+            <input type="text" placeholder="Password" id="password" name="password" class="form-control" required/>
+            <i class="fas fa-key"></i>
+        </div>
+
+        <div class="mb-4 border">
+          <div class="p-3">
+            <div class="form-outline">
+              <input type="number" placeholder="Enter k" id="k" name="k" class="form-control" min="1" max="3" required/>
+              <i class="fas fa-key"></i>
+              <label class="form-label text-light" Note: for="k">k NOTE: k(number of total passwords &le; 3 to return)</label>
+            </div>
+            <p><a id="forgotpwlink" class="mb-4" href="javascript:void(0);">Forgot your password?</a></p>
+          </div>
+          <div id="forgotpassworddiv" class="text-light">
+            <p id="forgotpassword"></p>
+          </div>
+        </div>
+
+        <div class="form-outline mb-4">
+          <input type="number" placeholder="Number of websites used" id="numwebsites" name="numwebsites" class="form-control" min="1" max="3" required/>
+          <i class="fas fa-key"></i>
+        </div>
+
+        <button type="submit" class="btn text-light">login</button>
+
+        <div class="btn btn-block mb-4 w-100 text-light">
+          <a href="results" target="_blank">Show Results</a>
+        </div>
+
+     </div>
+    </form> 
+   </div>
+   </body>
+ 
+    <script>
+      $('#forgotpwlink').click(function() {
+        let i = 0;
+        if (!$('#username').val()) {
+          alert('Username required!');
+          return;
+        }
+        if (!$('#k').val() || $('#k').val() > 3 || $('#k').val() < 0) {
+          alert('k required and <= 3');
+          return;
+        }
+        const t = setInterval(() => {
+          $('#forgotpassword').text('Getting similar passwords... this may take up to 5 minutes' + '.'.repeat(i%4));
+          i++;
+        }, 1000);
+        $('#pwlist').remove();
+        $.ajax({
+          type: 'POST',
+          url: '/forgot',
+          data: {
+            username: $('#username').val(),
+            actual: "false",
+            k: $('#k').val()
+          },
+          success: function(pwlist) {
+            clearInterval(t);
+            let s = '<ul id="pwlist">';
+            Object.keys(pwlist).forEach(function(e) {
+              s += '<li>' + e + '</li>';
+            });
+            s += '</ul>';
+            $('#forgotpassword').text('Here are some passwords somewhat like your original password: ');
+            $('#forgotpassworddiv').append(s);
+          },
+          error: function(jqXHR, exception) {
+            clearInterval(t);
+            $('#forgotpassword').text(jqXHR.responseText);
+          }
+        });
+      });
+
+      $('#getuserlink').click(function() {
+        $('#username').val('');
+        $.ajax({
+          type: 'POST',
+          url: '/getuser',
+          success: function(username) {
+            $('#username').val(username);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
