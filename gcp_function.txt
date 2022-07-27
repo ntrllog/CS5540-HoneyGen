@@ -31,19 +31,12 @@ def get_honeywords(password, k):
         download_bin_file()
 
     honeywords = []
-    honeywords.append(obfuscate_pw(password))
+    honeywords.append(password)
     if k-len(honeywords) > 0:
         model = fasttext.load_model("/tmp/model_trained_on_rockyou_500_epochs.bin")
         temp = model.get_nearest_neighbors(password, k=(k-len(honeywords)))
         for element in temp:
-            honeywords.append(obfuscate_pw(element[1]))
+            honeywords.append(element[1])
     random.shuffle(honeywords)
 
     return ','.join(honeywords)
-
-def obfuscate_pw(password):
-    o = list(password)
-    n_stars = len(password)//2
-    for i in random.sample(range(len(password)), n_stars):
-        o[i] = '*'
-    return ''.join(o)

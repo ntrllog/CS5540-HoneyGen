@@ -53,8 +53,13 @@ def forgotpw():
     k = k if k <= 3 else 3
     k = k if k > 0 else 1
 
-    honeywords = requests.post(os.environ['GCPURL'], json={'password': password, 'k': k}).text.split(',')
-    '''
+    # comment out if/else if not using GCP
+    if k > 1:
+        honeywords = requests.post(os.environ['GCPURL'], json={'password': password, 'k': k}).text.split(',')
+    else:
+        honeywords = [password]
+
+    ''' uncomment this if not using GCP
     honeywords=[]
     honeywords.append(obfuscate_pw(password))
     if k-len(honeywords) > 0:
@@ -64,7 +69,8 @@ def forgotpw():
             honeywords.append(obfuscate_pw(element[1]))
     random.shuffle(honeywords)
     '''
-    return {e: 0 for e in honeywords}
+
+    return {obfuscate_pw(e): 0 for e in honeywords}
 
 @app.post('/getuser')
 def getuser():
@@ -102,14 +108,12 @@ def showresults():
 
     return render_template('show_results.html', data=[[w1_k1_s, w1_k2_s, w1_k3_s, w2_k1_s, w2_k2_s, w2_k3_s, w3_k1_s, w3_k2_s, w3_k3_s],[w1_k1_f, w1_k2_f, w1_k3_f, w2_k1_f, w2_k2_f, w2_k3_f, w3_k1_f, w3_k2_f, w3_k3_f]])
 
-'''
 def obfuscate_pw(password):
     o = list(password)
     n_stars = len(password)//2
     for i in random.sample(range(len(password)), n_stars):
         o[i] = '*'
     return ''.join(o)
-'''
 
 def verify_user(username, password):
     user_doc = db.users.find_one({'username': username})
