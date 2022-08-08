@@ -6,31 +6,156 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
   </head>
   <body class="h-100">
-    <div class="container h-100">
+    <div class="container">
+      <h2 class="text-center">Comprehensive</h2>
       <canvas id="myChart"></canvas>
+    </div>
+    <hr>
+    <div class="container">
+      <h2 class="text-center">k=1</h2>
+      <canvas id="myChart2"></canvas>
+    </div>
+    <hr>
+    <div class="container">
+      <h2 class="text-center">k=2</h2>
+      <canvas id="myChart3"></canvas>
+    </div>
+    <hr>
+    <div class="container">
+      <h2 class="text-center">k=3</h2>
+      <canvas id="myChart4"></canvas>
+    </div>
+    <hr>
+    <div class="container">
+      <h2 class="text-center">w=1</h2>
+      <canvas id="myChart5"></canvas>
+    </div>
+    <hr>
+    <div class="container">
+      <h2 class="text-center">w=2</h2>
+      <canvas id="myChart6"></canvas>
+    </div>
+    <hr>
+    <div class="container">
+      <h2 class="text-center">w=3</h2>
+      <canvas id="myChart7"></canvas>
     </div>
     <script>
       var ctx = document.getElementById("myChart").getContext("2d");
-
       var data = {
           labels: ["w1_k1", "w1_k2", "w1_k3", "w2_k1", "w2_k2", "w2_k3", "w3_k1", "w3_k2", "w3_k3"],
           datasets: [
               {
                   label: "Success",
                   backgroundColor: '#6BCB77',
-                  data: {{ data[0]|safe }}
+                  data: {{ data[0] | safe }}
               },
               {
                   label: "Failures",
                   backgroundColor: '#FF6B6B',
-                  data: {{ data[1]|safe }}
+                  data: {{ data[1] | safe }}
               }
           ]
       };
-
       var myBarChart = new Chart(ctx, {
           type: 'bar',
           data: data
+      });
+
+      var ctx2 = document.getElementById("myChart2").getContext("2d");
+      var data2 = {
+          labels: ["w1_k1", "w2_k1", "w3_k1"],
+          datasets: [
+              {
+                  label: "Success",
+                  backgroundColor: '#6BCB77',
+                  data: {{ [data[0][0], data[0][3], data[0][6]] | safe }}
+              }
+          ]
+      }
+      var myBarChart2 = new Chart(ctx2, {
+          type: 'bar',
+          data: data2
+      });
+
+      var ctx3 = document.getElementById("myChart3").getContext("2d");
+      var data3 = {
+          labels: ["w1_k2", "w2_k2", "w3_k2"],
+          datasets: [
+              {
+                  label: "Success",
+                  backgroundColor: '#6BCB77',
+                  data: {{ [data[0][1], data[0][4], data[0][7]] | safe }}
+              }
+          ]
+      }
+      var myBarChart3 = new Chart(ctx3, {
+          type: 'bar',
+          data: data3
+      });
+
+      var ctx4 = document.getElementById("myChart4").getContext("2d");
+      var data4 = {
+          labels: ["w1_k3", "w2_k3", "w3_k3"],
+          datasets: [
+              {
+                  label: "Success",
+                  backgroundColor: '#6BCB77',
+                  data: {{ [data[0][2], data[0][5], data[0][8]] | safe }}
+              }
+          ]
+      }
+      var myBarChart4 = new Chart(ctx4, {
+          type: 'bar',
+          data: data4
+      });
+
+      var ctx5 = document.getElementById("myChart5").getContext("2d");
+      var data5 = {
+          labels: ["w1_k1", "w1_k2", "w1_k3"],
+          datasets: [
+              {
+                  label: "Success",
+                  backgroundColor: '#6BCB77',
+                  data: {{ [data[0][0], data[0][1], data[0][2]] | safe }}
+              }
+          ]
+      }
+      var myBarChart5 = new Chart(ctx5, {
+          type: 'bar',
+          data: data5
+      });
+
+      var ctx6 = document.getElementById("myChart6").getContext("2d");
+      var data6 = {
+          labels: ["w2_k1", "w2_k2", "w2_k3"],
+          datasets: [
+              {
+                  label: "Success",
+                  backgroundColor: '#6BCB77',
+                  data: {{ [data[0][3], data[0][4], data[0][5]] | safe }}
+              }
+          ]
+      }
+      var myBarChart6 = new Chart(ctx6, {
+          type: 'bar',
+          data: data6
+      });
+
+      var ctx7 = document.getElementById("myChart7").getContext("2d");
+      var data7 = {
+          labels: ["w3_k1", "w3_k2", "w3_k3"],
+          datasets: [
+              {
+                  label: "Success",
+                  backgroundColor: '#6BCB77',
+                  data: {{ [data[0][6], data[0][7], data[0][8]] | safe }}
+              }
+          ]
+      }
+      var myBarChart7 = new Chart(ctx7, {
+          type: 'bar',
+          data: data7
       });
     </script>
   </body>
